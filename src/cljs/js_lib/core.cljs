@@ -112,18 +112,33 @@
   (aget element "value"))
  )
 
-(defn get-type
-  "Returns elements type"
-  [element]
-  (aget element "type"))
-
 (defn set-value
- "Sets elements value"
+ "Sets element's value"
  [element
   new-value]
  (let [element (determine-param-type query-selector element)]
   (aset element "value" new-value))
  )
+
+(defn get-src
+ "Returns elements src attribute value"
+ [element]
+ (let [element (determine-param-type query-selector element)]
+  (aget element "src"))
+ )
+
+(defn set-src
+ "Sets element's src"
+ [element
+  new-value]
+ (let [element (determine-param-type query-selector element)]
+  (aset element "src" new-value))
+ )
+
+(defn get-type
+  "Returns elements type"
+  [element]
+  (aget element "type"))
 
 (defn get-parent-node
   "Get parentNode property"
@@ -176,7 +191,7 @@
 (defn get-inner-html
   "Get innerHTML property of first element feched by selector"
   [element]
-  (let [sl-node   (determine-param-type query-selector element)]
+  (let [sl-node (determine-param-type query-selector element)]
     (aget sl-node "innerHTML"))
   )
 
@@ -184,15 +199,17 @@
   "Set html-content as innerHTML property of elements feched by selector"
   [selector
    html-content]
-  (let [selected-nodes   (query-selector-all selector)]
-   (doseq [sl-node selected-nodes]
-    (aset sl-node "innerHTML" html-content))
+  (let [selected-nodes (determine-param-type query-selector-all selector)]
+   (if (vector? selected-nodes)
+    (doseq [sl-node selected-nodes]
+     (aset sl-node "innerHTML" html-content))
+    (aset selected-nodes "innerHTML" html-content))
    ))
 
 (defn get-outer-html
   "Get outerHTML property of first element feched by selector"
   [selector]
-  (let [sl-node   (query-selector selector)]
+  (let [sl-node (query-selector selector)]
     (aget sl-node "outerHTML"))
   )
 
@@ -200,7 +217,7 @@
   "Set html-content as outerHTML property of elements feched by selector"
   [selector
    html-content]
-  (let [selected-nodes   (query-selector-all selector)]
+  (let [selected-nodes (query-selector-all selector)]
    (doseq [sl-node selected-nodes]
     (aset sl-node "outerHTML" html-content))
    ))
