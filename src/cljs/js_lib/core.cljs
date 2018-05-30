@@ -645,34 +645,15 @@
 (defn start-please-wait
   "Display please wait message"
   []
-  (fade-in "body"
-           "<div class=\"please-wait-anim\" ></div>"
-           anim-time
-           "please-wait-anim-id"
-           "please-wait-anim")
-  (fade-in "body"
-           "<div class=\"please-wait-background\" ></div>"
-           anim-time
-           "please-wait-background-id"
-           "please-wait-background"
-           0
-           0.2))
+  (append-element
+    "body"
+    "<div class=\"please-wait\" ></div>"))
 
 (defn end-please-wait
   "Hide please wait message"
   []
-  (fade-out "div.please-wait-anim"
-            anim-time
-            "please-wait-anim-id"
-            false
-            "please-wait-anim")
-  (fade-out "div.please-wait-background"
-            anim-time
-            "please-wait-background-id"
-            false
-            "please-wait-background"
-            0.2
-            0))
+  (remove-element
+    "div.please-wait"))
 
 (defn is-checked?
   "Return value of checked property from html element"
