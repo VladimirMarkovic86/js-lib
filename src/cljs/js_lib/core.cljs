@@ -1,13 +1,17 @@
 (ns js-lib.core
-  (:require [ajax-lib.http.mime-type :as mt]
+  (:require [ajax-lib.core :refer [ajax get-response]]
+            [ajax-lib.http.mime-type :as mt]
             [ajax-lib.http.request-header :as rh]
             [ajax-lib.http.entity-header :as eh]
-            [htmlcss-lib.core :refer [gen stl anmtn slctr]]))
+            [htmlcss-lib.core :refer [gen stl anmtn slctr]]
+            [cljs.reader :as reader]))
 
 ; document.getElementById("MyElement").classList.contains('MyClass')
 ; document.getElementById("MyElement").classList.toggle('MyClass')
 
 (def anim-time 100)
+
+(def check-progress-url "/clojure/check-progress")
 
 (defn get-url
   "Retrieve URL from address bar"
@@ -253,7 +257,7 @@
    event-type
    event-function
    & [fn-params]]
-  (let [event-funcs      (str event-type "-funcs")]
+  (let [event-funcs (str event-type "-funcs")]
    (aset element
          event-funcs
          (assoc (aget element event-funcs)
@@ -423,11 +427,12 @@
    ))
 
 (defn timeout
-  "Delay function execution by milliseconds"
-  [execute-fn
-   delay-time]
-  (js/setTimeout execute-fn
-                 delay-time))
+ "Delay function execution by milliseconds"
+ [execute-fn
+  delay-time]
+ (js/setTimeout
+   execute-fn
+   delay-time))
 
 (defn get-attr
   "Get attribute's value of element"
@@ -643,17 +648,107 @@
   )
 
 (defn start-please-wait
-  "Display please wait message"
-  []
-  (append-element
-    "body"
-    "<div class=\"please-wait\" ></div>"))
+ "Display please wait message"
+ []
+ (.blur (.-activeElement js/document))
+ (append-element
+   "body"
+   "<div class=\"please-wait\" ></div>"))
 
 (defn end-please-wait
-  "Hide please wait message"
-  []
-  (remove-element
-    "div.please-wait"))
+ "Hide please wait message"
+ []
+ (remove-element
+   "div.please-wait"))
+
+(def progress-value-check (atom true))
+
+(def progress-value-atom (atom 0))
+
+(defn check-progress-fn-success
+ ""
+ [xhr
+  params-map]
+ (let [response (get-response xhr)
+       progress-value (:progress-value response)
+       progress-value-int (reader/read-string progress-value)
+       progress-bar-done (query-selector ".progress-bar")
+       progress-bar-done-number (query-selector ".progress-bar-done-number")
+       check-again-fn (:check-progress-fn params-map)
+       check-again-fn-param (get-in params-map [:entity :check-request])]
+  (when (< @progress-value-atom
+           progress-value-int)
+   (reset!
+     progress-value-atom
+     progress-value-int))
+  (if @progress-value-check
+    (check-again-fn
+      check-again-fn-param)
+    (reset!
+      progress-value-check
+      true))
+  (when-not (nil? progress-bar-done)
+    (set-attr
+      progress-bar-done
+      "style"
+      (str
+        "background-image: "
+         "linear-gradient(to right, "
+           "red 0%, "
+           "red " @progress-value-atom "%, "
+           "white " @progress-value-atom "%, "
+           "white 100%);"))
+   )
+  (when-not (nil? progress-bar-done-number)
+    (set-inner-html
+      progress-bar-done-number
+      (str
+        @progress-value-atom
+        "%"))
+   ))
+ )
+
+(defn check-progress-fn
+ ""
+ [check-request]
+ (ajax
+   {:url check-progress-url
+    :success-fn check-progress-fn-success
+    :entity {:check-request check-request}
+    :check-progress-fn check-progress-fn
+    :dont-print-xhr true}))
+
+(defn start-progress-bar
+ "Display progress bar message"
+ [check-request]
+ (.blur (.-activeElement js/document))
+ (start-please-wait)
+ (append-element
+   "body"
+   (str
+     "<div class=\"progress-bar-background\" >"
+      "<div class=\"progress-bar\" >"
+       "<div class=\"progress-bar-done-number\" >"
+         "0%"
+       "</div>"
+      "</div>"
+     "</div>"
+     ))
+ (reset!
+   progress-value-atom
+   0)
+ (check-progress-fn
+   check-request))
+
+(defn end-progress-bar
+ "Hide progress bar message"
+ []
+ (reset!
+   progress-value-check
+   false)
+ (remove-element
+   "div.progress-bar-background")
+ (end-please-wait))
 
 (defn is-checked?
   "Return value of checked property from html element"
