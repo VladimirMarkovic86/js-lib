@@ -1,17 +1,10 @@
 (ns js-lib.core
-  (:require [ajax-lib.core :refer [ajax get-response]]
-            [ajax-lib.http.mime-type :as mt]
-            [ajax-lib.http.request-header :as rh]
-            [ajax-lib.http.entity-header :as eh]
-            [htmlcss-lib.core :refer [gen stl anmtn slctr]]
-            [cljs.reader :as reader]))
+  (:require [htmlcss-lib.core :refer [gen stl anmtn slctr]]))
 
 ; document.getElementById("MyElement").classList.contains('MyClass')
 ; document.getElementById("MyElement").classList.toggle('MyClass')
 
 (def anim-time 100)
-
-(def check-progress-url "/clojure/check-progress")
 
 (defn get-url
   "Retrieve URL from address bar"
@@ -661,32 +654,11 @@
  (remove-element
    "div.please-wait"))
 
-(def progress-value-check (atom true))
-
-(def progress-value-atom (atom 0))
-
-(defn check-progress-fn-success
+(defn update-progress-bar
  ""
- [xhr
-  params-map]
- (let [response (get-response xhr)
-       progress-value (:progress-value response)
-       progress-value-int (reader/read-string progress-value)
-       progress-bar-done (query-selector ".progress-bar")
-       progress-bar-done-number (query-selector ".progress-bar-done-number")
-       check-again-fn (:check-progress-fn params-map)
-       check-again-fn-param (get-in params-map [:entity :check-request])]
-  (when (< @progress-value-atom
-           progress-value-int)
-   (reset!
-     progress-value-atom
-     progress-value-int))
-  (if @progress-value-check
-    (check-again-fn
-      check-again-fn-param)
-    (reset!
-      progress-value-check
-      true))
+ [progress-value]
+ (let [progress-bar-done (query-selector ".progress-bar")
+       progress-bar-done-number (query-selector ".progress-bar-done-number")]
   (when-not (nil? progress-bar-done)
     (set-attr
       progress-bar-done
@@ -695,32 +667,22 @@
         "background-image: "
          "linear-gradient(to right, "
            "red 0%, "
-           "red " @progress-value-atom "%, "
-           "white " @progress-value-atom "%, "
+           "red " progress-value "%, "
+           "white " progress-value "%, "
            "white 100%);"))
    )
   (when-not (nil? progress-bar-done-number)
     (set-inner-html
       progress-bar-done-number
       (str
-        @progress-value-atom
+        progress-value
         "%"))
    ))
  )
 
-(defn check-progress-fn
- ""
- [check-request]
- (ajax
-   {:url check-progress-url
-    :success-fn check-progress-fn-success
-    :entity {:check-request check-request}
-    :check-progress-fn check-progress-fn
-    :dont-print-xhr true}))
-
 (defn start-progress-bar
  "Display progress bar message"
- [check-request]
+ []
  (.blur (.-activeElement js/document))
  (start-please-wait)
  (append-element
@@ -734,18 +696,11 @@
       "</div>"
      "</div>"
      ))
- (reset!
-   progress-value-atom
-   0)
- (check-progress-fn
-   check-request))
+ )
 
 (defn end-progress-bar
  "Hide progress bar message"
  []
- (reset!
-   progress-value-check
-   false)
  (remove-element
    "div.progress-bar-background")
  (end-please-wait))
