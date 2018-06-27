@@ -102,6 +102,17 @@
     []))
   ))
 
+(defn is-valid?
+ "Returns elements value"
+ [element]
+ (let [element (determine-param-type query-selector element)]
+  (aget
+    (aget
+      element
+      "validity")
+    "valid"))
+ )
+
 (defn get-value
  "Returns elements value"
  [element]
@@ -115,6 +126,21 @@
   new-value]
  (let [element (determine-param-type query-selector element)]
   (aset element "value" new-value))
+ )
+
+(defn get-checked
+ "Returns elements checked"
+ [element]
+ (let [element (determine-param-type query-selector element)]
+  (aget element "checked"))
+ )
+
+(defn set-checked
+ "Sets element's checked"
+ [element
+  new-value]
+ (let [element (determine-param-type query-selector element)]
+  (aset element "checked" new-value))
  )
 
 (defn get-src
