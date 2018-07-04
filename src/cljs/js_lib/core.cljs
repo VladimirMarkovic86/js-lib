@@ -6,6 +6,31 @@
 
 (def anim-time 100)
 
+(defn click
+  ""
+  [elem
+   & [window-obj]]
+  (let [window-obj (or window-obj
+                       js/window)
+        event (.createEvent
+                (aget
+                  window-obj
+                  "document")
+                "MouseEvent")]
+    (.initMouseEvent
+      event
+      "click"
+      true true
+      window-obj
+      0 0 0 0 0
+      false false false false
+      0
+      nil)
+    (.dispatchEvent
+      elem
+      event))
+  )
+
 (defn get-url
   "Retrieve URL from address bar"
   []
@@ -33,7 +58,14 @@
   "Select first element of what css selector fetches from document
    returns single element (html node)"
   [selector]
-  (.querySelector js/document selector))
+  (if (string? selector)
+    (.querySelector
+      js/document
+      selector)
+    (if (html? selector)
+      selector
+      nil))
+  )
 
 (defn query-selector-all
   "Select all element of what css selector fetches from document
@@ -47,7 +79,14 @@
    returns single element (html node)"
   [element
    selector]
-  (.querySelector element selector))
+  (if (string? selector)
+    (.querySelector
+      element
+      selector)
+    (if (html? selector)
+      selector
+      nil))
+ )
 
 (defn query-selector-all-on-element
   "Select all element of what css selector fetches from element param
@@ -68,6 +107,22 @@
    returns collection of elements (html nodes)"
   [element-class]
   (.getElementsByClassName js/document element-class))
+
+(defn xpath
+  "(xpath '//div[contains(text(), 'Searched text')]')"
+  [selector]
+  (let [iterator (.evaluate
+                   js/document
+                   selector
+                   js/document
+                   nil
+                   (aget
+                     js/XPathResult
+                     "UNORDERED_NODE_ITERATOR_TYPE")
+                   nil)
+        this-node (.iterateNext
+                    iterator)]
+    this-node))
 
 (defn get-child-nodes
   "Fetch child nodes of element param"
