@@ -7,7 +7,7 @@
 (def anim-time 100)
 
 (defn click
-  ""
+  "Executes click event on element, in particular window if needed"
   [elem
    & [window-obj]]
   (let [window-obj (or window-obj
@@ -224,10 +224,17 @@
   (aget element "parentNode"))
 
 (defn ancestor
-  ""
+  "Finds ancestor of an element at particular level"
   [element
    ancestor-level]
-  (reduce (fn [acc elem] (get-parent-node acc)) element (range ancestor-level))
+  (reduce
+    (fn [acc
+         elem]
+      (get-parent-node
+        acc))
+    element
+    (range
+      ancestor-level))
   )
 
 (defn replace-single
@@ -303,7 +310,7 @@
 ; Implement multi select
 
 (defn get-selected-options
- ""
+ "Get values of property selectedOptions and pack them in vector"
  [element]
  (let [element (determine-param-type query-selector element)
        slctd-optns (convert-to-vector (aget element "selectedOptions"))
@@ -736,7 +743,7 @@
    "div.please-wait"))
 
 (defn update-progress-bar
- ""
+ "Update percentage of progress bar"
  [progress-value]
  (let [progress-bar-done (query-selector ".progress-bar")
        progress-bar-done-number (query-selector ".progress-bar-done-number")]
@@ -812,18 +819,23 @@
   )
 
 (defn cb-checked-values
- ""
- [checkbox-group-name]
- (let [checkbox-group-elements (query-selector-all
-                                (str "input[name='"
-                                     checkbox-group-name
-                                     "']"))
-       checked-values (atom [])]
-  (doseq [checkbox-el checkbox-group-elements]
-   (when (is-checked? checkbox-el)
-    (swap! checked-values conj (get-value checkbox-el))
-    ))
-  @checked-values))
+  "Checks which values are checked in checkbox group and packs them in vector"
+  [checkbox-group-name]
+  (let [checkbox-group-elements (query-selector-all
+                                 (str
+                                   "input[name='"
+                                   checkbox-group-name
+                                   "']"))
+        checked-values (atom [])]
+   (doseq [checkbox-el checkbox-group-elements]
+    (when (is-checked? checkbox-el)
+     (swap!
+       checked-values
+       conj
+       (get-value
+         checkbox-el))
+     ))
+   @checked-values))
 
 (defn fade-out-and-fade-in
   "Automation fade in fade out of an element"
