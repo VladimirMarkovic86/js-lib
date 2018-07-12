@@ -32,6 +32,57 @@
       event))
  )
 
+(defn change
+  "Executes change event on element, in particular window if needed"
+  [elem
+   & [window-obj]]
+  (let [window-obj (or window-obj
+                       js/window)
+        event (.createEvent
+                (aget
+                  window-obj
+                  "document")
+                "Event")]
+    (.initEvent
+      event
+      "change"
+      true true
+      window-obj
+      0 0 0 0 0
+      false false false false
+      0
+      nil)
+    (.dispatchEvent
+      elem
+      event))
+ )
+
+(defn focus
+  "Executes change event on element, in particular window if needed"
+  [elem
+   & [window-obj]]
+  (let [window-obj (or window-obj
+                       js/window)
+        event (.createEvent
+                (aget
+                  window-obj
+                  "document")
+                "FocusEvent")]
+    (.initFocusEvent
+      event
+      "focus"
+      true true
+      window-obj
+      0 0 0 0 0
+      false false false false
+      0
+      nil)
+    (.dispatchEvent
+      elem
+      event))
+ )
+
+
 (defn get-url
   "Retrieve URL from address bar"
   []
