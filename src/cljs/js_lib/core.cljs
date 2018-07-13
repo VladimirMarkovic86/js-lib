@@ -1225,8 +1225,8 @@
        anim-duration)
     anim-duration))
 
-(defn- find-event-type
-  ""
+(defn find-event-type
+  "Find event type of predefined types"
   [event
    index]
   (when (< index
@@ -1245,29 +1245,37 @@
    ))
 
 (defn- init-event
-  ""
+  "Initialize event for particular event object"
   [event
    window-obj]
-  (when (= (type event)
-           "Event")
-    event)
-  (when (string? event)
-    (let [{event-type :event-type
-           init-event-fn :init-event-fn} (find-event-type
-                                           event
-                                           0)
-          event-obj (.createEvent
-                      (aget
-                        window-obj
-                        "document")
-                      event-type)]
-      (js-invoke
-        event-obj
-        init-event-fn
-        event
-        true true)
-      event-obj))
- )
+  (let [return-event (atom nil)]
+    (when (instance?
+            js/Event
+            event)
+      (reset!
+        return-event
+        event))
+    (when (string? event)
+      (let [{event-type :event-type
+             init-event-fn :init-event-fn} (find-event-type
+                                             event
+                                             0)
+            event-obj (.createEvent
+                        (aget
+                          window-obj
+                          "document")
+                        event-type)]
+        (js-invoke
+          event-obj
+          init-event-fn
+          event
+          true
+          true)
+        (reset!
+          return-event
+          event-obj))
+     )
+    @return-event))
 
 (defn dispatch-event
   ""
