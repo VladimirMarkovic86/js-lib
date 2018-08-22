@@ -207,15 +207,15 @@
 (defn html?
   "Is data fn parameter HTML element"
   [data]
-  (if (not= data
-            nil)
-    (> (.indexOf
-         (aget
-           (type data)
-           "name")
-         "HTML")
-       -1)
-    false))
+  (when data
+    (when-let [data-type-name (aget
+                                (type data)
+                                "name")]
+      (> (.indexOf
+           data-type-name
+           "HTML")
+         -1))
+   ))
 
 (defn convert-to-vector
   "Convert html NodeList object to clojure vector"
@@ -254,24 +254,68 @@
    returns single element (html node)"
   [element
    selector]
-  (if (string? selector)
-    (.querySelector
-      element
-      selector)
+  (let [result (atom nil)]
+    (when (and (string? element)
+               (string? selector))
+      (let [element (.querySelector
+                      js/document
+                      element)]
+        (reset!
+          result
+          (.querySelector
+            element
+            selector))
+       ))
+    (when (and (html? element)
+               (string? selector))
+      (reset!
+        result
+        (.querySelector
+          element
+          selector))
+     )
     (when (html? selector)
-      selector))
- )
+      (reset!
+        result
+        selector))
+    @result))
 
 (defn query-selector-all-on-element
   "Select all element of what css selector fetches from element param
    returns collection of elements (html nodes)"
   [element
    selector]
-  (convert-to-vector
-    (.querySelectorAll
-      element
-      selector))
- )
+  (let [result (atom [])]
+    (when (and (string? element)
+               (string? selector))
+      (let [elements (.querySelectorAll
+                       js/document
+                       element)]
+        (doseq [element elements]
+          (swap!
+            result
+            (fn [atom-value
+                 collection]
+              (apply
+                conj
+                atom-value
+                collection))
+            (convert-to-vector
+              (.querySelectorAll
+                element
+                selector))
+           ))
+       ))
+    (when (and (html? element)
+               (string? selector))
+      (reset!
+        result
+        (convert-to-vector
+          (.querySelectorAll
+            element
+            selector))
+       ))
+    @result))
 
 (defn get-by-id
   "Select element by id
@@ -420,7 +464,7 @@
   [element]
   (aget element "type"))
 
-(defn get-parent-node
+(defn get-parent
   "Get parentNode property"
   [element]
   (aget element "parentNode"))
@@ -432,7 +476,7 @@
   (reduce
     (fn [acc
          elem]
-      (get-parent-node
+      (get-parent
         acc))
     element
     (range
@@ -712,11 +756,19 @@
                       parse-html
                       html-content)]
     (doseq [sl-node selected-nodes]
-      (doseq [ch-node child-nodes]
+      (when (vector? child-nodes)
+        (doseq [ch-node child-nodes]
+          (let [insert-before-this (first (get-child-nodes sl-node))]
+            (.insertBefore
+              sl-node
+              ch-node
+              insert-before-this))
+         ))
+      (when (html? child-nodes)
         (let [insert-before-this (first (get-child-nodes sl-node))]
           (.insertBefore
             sl-node
-            ch-node
+            child-nodes
             insert-before-this))
        ))
    ))
@@ -742,10 +794,16 @@
             sl-node
             child-nodes))
        )
-      (.appendChild
-        selected-nodes
-        child-nodes))
-   ))
+      (if (vector? child-nodes)
+        (doseq [ch-node child-nodes]
+          (.appendChild
+            selected-nodes
+            ch-node))
+        (.appendChild
+          selected-nodes
+          child-nodes))
+     ))
+ )
 
 (defn content
   "Empty fetched elements by selector and append html string"
@@ -760,13 +818,21 @@
 (defn remove-element
   "Remove elements fetched by selector"
   [selector]
-  (let [selected-nodes (query-selector-all
+  (let [selected-nodes (determine-param-type
+                         query-selector-all
                          selector)]
-    (doseq [sl-node selected-nodes]
+    (when (vector? selected-nodes)
+      (doseq [sl-node selected-nodes]
+        (.removeChild
+          (get-parent
+            sl-node)
+          sl-node))
+     )
+    (when (html? selected-nodes)
       (.removeChild
-        (get-parent-node
-          sl-node)
-        sl-node))
+        (get-parent
+          selected-nodes)
+        selected-nodes))
    ))
 
 (defn remove-element-content
@@ -791,7 +857,7 @@
                             selector)]
        (doseq [sl-node selected-nodes]
          (.removeChild
-           (get-parent-node
+           (get-parent
              sl-node)
            sl-node))
       ))
@@ -852,12 +918,14 @@
   (let [elements (determine-param-type
                    query-selector-all
                    elements)]
-    (if (vector? elements)
+    (when (vector? elements)
       (doseq [element elements]
         (.add
           (get-class-list
             element)
           single-class))
+     )
+    (when (html? elements)
       (.add
         (get-class-list
           elements)
@@ -871,12 +939,15 @@
   (let [elements (determine-param-type
                    query-selector-all
                    elements)]
-    (if (vector? elements)
+    
+    (when (vector? elements)
       (doseq [element elements]
         (.remove
           (get-class-list
             element)
           single-class))
+     )
+    (when (html? elements)
       (.remove
         (get-class-list
           elements)
