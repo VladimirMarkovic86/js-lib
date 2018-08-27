@@ -288,9 +288,10 @@
   (let [result (atom [])]
     (when (and (string? element)
                (string? selector))
-      (let [elements (.querySelectorAll
-                       js/document
-                       element)]
+      (let [elements (convert-to-vector
+                       (.querySelectorAll
+                         js/document
+                         element))]
         (doseq [element elements]
           (swap!
             result
@@ -409,6 +410,24 @@
                   query-selector
                   element)]
     (aget element "value"))
+ )
+
+(defn get-value-as-number
+  "Returns elements value"
+  [element]
+  (let [element (determine-param-type
+                  query-selector
+                  element)]
+    (aget element "valueAsNumber"))
+ )
+
+(defn get-value-as-date
+  "Returns elements value"
+  [element]
+  (let [element (determine-param-type
+                  query-selector
+                  element)]
+    (aget element "valueAsDate"))
  )
 
 (defn set-value
