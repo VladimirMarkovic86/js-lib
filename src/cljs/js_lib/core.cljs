@@ -1334,10 +1334,10 @@
        ))
    ))
 
-(defn- init-event
+(defn init-event
   "Initialize event for particular event object"
   [event
-   window-obj]
+   & [window-obj]]
   (let [return-event (atom nil)]
     (when (instance?
             js/Event
@@ -1346,7 +1346,9 @@
         return-event
         event))
     (when (string? event)
-      (let [{event-type :event-type
+      (let [window-obj (or window-obj
+                           js/window)
+            {event-type :event-type
              init-event-fn :init-event-fn} (find-event-type
                                              event
                                              0)
@@ -1374,10 +1376,13 @@
    & [window-obj]]
   (let [window-obj (or window-obj
                        js/window)
-        elem (query-selector-on-element
-               (aget
-                 window-obj
-                 "document")
+        elem (if (string?
+                   elem)
+               (query-selector-on-element
+                 (aget
+                   window-obj
+                   "document")
+                 elem)
                elem)
         event-obj (init-event
                     event
