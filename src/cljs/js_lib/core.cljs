@@ -8,194 +8,194 @@
      100)
 
 (def events
-     [{:event-type "AnimationEvent" 	;For CSS animations
+     [{:event-type "AnimationEvent"  ;For CSS animations
        :init-event-fn "initAnimationEvent"
        :events
-         #{"animationend" 	;The event occurs when a CSS animation has completed
-           "animationiteration" 	;The event occurs when a CSS animation is repeated
-           "animationstart" 	;The event occurs when a CSS animation has started
+         #{"animationend"  ;The event occurs when a CSS animation has completed
+           "animationiteration"  ;The event occurs when a CSS animation is repeated
+           "animationstart"  ;The event occurs when a CSS animation has started
            }}
-      {:event-type "ClipboardEvent" 	;For modification of the clipboard
+      {:event-type "ClipboardEvent"  ;For modification of the clipboard
        :init-event-fn "initClipboardEvent"
        :events
-         #{"copy" 	;The event occurs when the user copies the content of an element
-           "cut" 	;The event occurs when the user cuts the content of an element
-           "paste" 	;The event occurs when the user pastes some content in an element
+         #{"copy"  ;The event occurs when the user copies the content of an element
+           "cut"  ;The event occurs when the user cuts the content of an element
+           "paste"  ;The event occurs when the user pastes some content in an element
            }}
-      {:event-type "DragEvent" 	;For drag and drop interaction
+      {:event-type "DragEvent"  ;For drag and drop interaction
        :init-event-fn "initDragEvent"
        :events
-         #{"drag" 	;The event occurs when an element is being dragged
-           "dragend" 	;The event occurs when the user has finished dragging an element
-           "dragenter" 	;The event occurs when the dragged element enters the drop target
-           "dragleave" 	;The event occurs when the dragged element leaves the drop target
-           "dragover" 	;The event occurs when the dragged element is over the drop target
-           "dragstart" 	;The event occurs when the user starts to drag an element
-           "drop" 	;The event occurs when the dragged element is dropped on the
+         #{"drag"  ;The event occurs when an element is being dragged
+           "dragend"  ;The event occurs when the user has finished dragging an element
+           "dragenter"  ;The event occurs when the dragged element enters the drop target
+           "dragleave"  ;The event occurs when the dragged element leaves the drop target
+           "dragover"  ;The event occurs when the dragged element is over the drop target
+           "dragstart"  ;The event occurs when the user starts to drag an element
+           "drop"  ;The event occurs when the dragged element is dropped on the
                      ;drop target
            }}
-      {:event-type "FocusEvent" 	;For focus-related events
+      {:event-type "FocusEvent"  ;For focus-related events
        :init-event-fn "initFocusEvent"
        :events
-         #{"blur" 	;The event occurs when an element loses focus
-           "focus" 	;The event occurs when an element gets focus
-           "focusin" 	;The event occurs when an element is about to get focus
-           "focusout" 	;The event occurs when an element is about to lose focus
+         #{"blur"  ;The event occurs when an element loses focus
+           "focus"  ;The event occurs when an element gets focus
+           "focusin"  ;The event occurs when an element is about to get focus
+           "focusout"  ;The event occurs when an element is about to lose focus
            }}
-      {:event-type "HashChangeEvent" 	;For changes in the anchor part of the URL
+      {:event-type "HashChangeEvent"  ;For changes in the anchor part of the URL
        :init-event-fn "initHashChangeEvent"
        :events
-         #{"hashchange" 	;The event occurs when there has been changes to the anchor
+         #{"hashchange"  ;The event occurs when there has been changes to the anchor
                            ;part of a URL
            }}
-      {:event-type "InputEvent" 	;For user input
+      {:event-type "InputEvent"  ;For user input
        :init-event-fn "initInputEvent"
        :events
-         #{"input" 	;The event occurs when an element gets user input
+         #{"input"  ;The event occurs when an element gets user input
            }}
-      {:event-type "KeyboardEvent" 	;For keyboard interaction
+      {:event-type "KeyboardEvent"  ;For keyboard interaction
        :init-event-fn "initKeyboardEvent"
        :events
-         #{"keydown" 	;The event occurs when the user is pressing a key
-           "keypress" 	;The event occurs when the user presses a key
-           "keyup" 	;The event occurs when the user releases a key
+         #{"keydown"  ;The event occurs when the user is pressing a key
+           "keypress"  ;The event occurs when the user presses a key
+           "keyup"  ;The event occurs when the user releases a key
            }}
-      {:event-type "MouseEvent" 	;For mouse interaction
+      {:event-type "MouseEvent"  ;For mouse interaction
        :init-event-fn "initMouseEvent"
        :events
-         #{"click" 	;The event occurs when the user clicks on an element
-           "contextmenu" 	;The event occurs when the user right-clicks on an element
+         #{"click"  ;The event occurs when the user clicks on an element
+           "contextmenu"  ;The event occurs when the user right-clicks on an element
                             ;to open a context menu
-           "dblclick" 	;The event occurs when the user double-clicks on an element
-           "mousedown" 	;The event occurs when the user presses a mouse button over
+           "dblclick"  ;The event occurs when the user double-clicks on an element
+           "mousedown"  ;The event occurs when the user presses a mouse button over
                           ;an element
-           "mouseenter" 	;The event occurs when the pointer is moved onto an element
-           "mouseleave" 	;The event occurs when the pointer is moved out of an element
-           "mousemove" 	;The event occurs when the pointer is moving while it is over
+           "mouseenter"  ;The event occurs when the pointer is moved onto an element
+           "mouseleave"  ;The event occurs when the pointer is moved out of an element
+           "mousemove"  ;The event occurs when the pointer is moving while it is over
                           ;an element
-           "mouseout" 	;The event occurs when a user moves the mouse pointer out of an
+           "mouseout"  ;The event occurs when a user moves the mouse pointer out of an
                          ;element, or out of one of its children
-           "mouseover" 	;The event occurs when the pointer is moved onto an element, or
+           "mouseover"  ;The event occurs when the pointer is moved onto an element, or
                           ;onto one of its children
-           "mouseup" 	;The event occurs when a user releases a mouse button over
+           "mouseup"  ;The event occurs when a user releases a mouse button over
                       ;an element
            }}
-      {:event-type "PageTransitionEvent" 	;For navigating to, and away from, web pages
+      {:event-type "PageTransitionEvent"  ;For navigating to, and away from, web pages
        :init-event-fn "initPageTransitionEvent"
        :events
-         #{"pagehide" 	;The event occurs when the user navigates away from a webpage
-           "pageshow" 	;The event occurs when the user navigates to a webpage
+         #{"pagehide"  ;The event occurs when the user navigates away from a webpage
+           "pageshow"  ;The event occurs when the user navigates to a webpage
            }}
-      {:event-type "PopStateEvent" 	;For changes in the history entry
+      {:event-type "PopStateEvent"  ;For changes in the history entry
        :init-event-fn "initPopStateEvent"
        :events
-         #{"popstate" 	;The event occurs when the window's history changes
+         #{"popstate"  ;The event occurs when the window's history changes
            }}
-      {:event-type "ProgressEvent" 	;For the progress of loading external resources
+      {:event-type "ProgressEvent"  ;For the progress of loading external resources
        :init-event-fn "initProgressEvent"
        :events
-         #{"error" 	;The event occurs when an error occurs while loading an external file
-           "loadstart" 	;The event occurs when the browser starts looking for the
+         #{"error"  ;The event occurs when an error occurs while loading an external file
+           "loadstart"  ;The event occurs when the browser starts looking for the
                         ;specified media
            }}
-      {:event-type "StorageEvent" 	;For changes in the window's storage area.
+      {:event-type "StorageEvent"  ;For changes in the window's storage area.
        :init-event-fn "initStorageEvent"
        :events
-         #{"storage" 	;The event occurs when a Web Storage area is updated
+         #{"storage"  ;The event occurs when a Web Storage area is updated
            }}
-      {:event-type "TouchEvent" 	;For touch interaction
+      {:event-type "TouchEvent"  ;For touch interaction
        :init-event-fn "initTouchEvent"
        :events
-         #{"touchcancel" 	;The event occurs when the touch is interrupted
-           "touchend" 	;The event occurs when a finger is removed from a touch screen
-           "touchmove" 	;The event occurs when a finger is dragged across the screen
-           "touchstart" 	;The event occurs when a finger is placed on a touch screen
+         #{"touchcancel"  ;The event occurs when the touch is interrupted
+           "touchend"  ;The event occurs when a finger is removed from a touch screen
+           "touchmove"  ;The event occurs when a finger is dragged across the screen
+           "touchstart"  ;The event occurs when a finger is placed on a touch screen
            }}
-      {:event-type "TransitionEvent" 	;For CSS transitions
+      {:event-type "TransitionEvent"  ;For CSS transitions
        :init-event-fn "initTransitionEvent"
        :events
-         #{"transitionend" 	;The event occurs when a CSS transition has completed
+         #{"transitionend"  ;The event occurs when a CSS transition has completed
            }}
-      {:event-type "UiEvent" 	;For user interface interaction
+      {:event-type "UiEvent"  ;For user interface interaction
        :init-event-fn "initUiEvent"
        :events
-         #{"abort" 	;The event occurs when the loading of a media is aborted
-           "beforeunload" 	;The event occurs before the document is about to be unloaded
-           "error" 	;The event occurs when an error occurred during the loading of a
+         #{"abort"  ;The event occurs when the loading of a media is aborted
+           "beforeunload"  ;The event occurs before the document is about to be unloaded
+           "error"  ;The event occurs when an error occurred during the loading of a
                     ;media file
-           "load" 	;The event occurs when an object has loaded
-           "resize" 	;The event occurs when the document view is resized
-           "scroll" 	;The event occurs when an element's scrollbar is being scrolled
-           "select" 	;The event occurs after the user selects some text (for <input>
+           "load"  ;The event occurs when an object has loaded
+           "resize"  ;The event occurs when the document view is resized
+           "scroll"  ;The event occurs when an element's scrollbar is being scrolled
+           "select"  ;The event occurs after the user selects some text (for <input>
                      ;and <textarea>)
-           "unload" 	;The event occurs once a page has unloaded (for <body>)
+           "unload"  ;The event occurs once a page has unloaded (for <body>)
            }}
-      {:event-type "WheelEvent" 	;For mousewheel interaction
+      {:event-type "WheelEvent"  ;For mousewheel interaction
        :init-event-fn "initWheelEvent"
        :events
-         #{"onwheel" 	;The event occurs when the mouse wheel rolls up or down over
+         #{"onwheel"  ;The event occurs when the mouse wheel rolls up or down over
                       ;an element
            }}
       {:event-type "Event"
        :init-event-fn "initEvent"
        :events
-         #{"abort" 	;The event occurs when the loading of a media is aborted
-           "afterprint" 	;The event occurs when a page has started printing
-           "beforeprint" 	;The event occurs when a page is about to be printed
-           "beforeunload" 	;The event occurs before the document is about to be unloaded
-           "canplay" 	;The event occurs when the browser can start playing the
+         #{"abort"  ;The event occurs when the loading of a media is aborted
+           "afterprint"  ;The event occurs when a page has started printing
+           "beforeprint"  ;The event occurs when a page is about to be printed
+           "beforeunload"  ;The event occurs before the document is about to be unloaded
+           "canplay"  ;The event occurs when the browser can start playing the
                       ;media (when it has buffered enough to begin)
-           "canplaythrough" 	;The event occurs when the browser can play through
+           "canplaythrough"  ;The event occurs when the browser can play through
                              ;the media without stopping for buffering
-           "change" 	;The event occurs when the content of a form element, the selection,
+           "change"  ;The event occurs when the content of a form element, the selection,
                      ; or the checked state have changed (for <input>, <select>,
                      ; and <textarea>)
-           "error" 	;The event occurs when an error occurs while loading an external file
-           "fullscreenchange" 	;The event occurs when an element is displayed
+           "error"  ;The event occurs when an error occurs while loading an external file
+           "fullscreenchange"  ;The event occurs when an element is displayed
                                ;in fullscreen mode
-           "fullscreenerror" 	;The event occurs when an element can not be displayed
+           "fullscreenerror"  ;The event occurs when an element can not be displayed
                               ;in fullscreen mode
-           "input" 	;The event occurs when an element gets user input
-           "invalid" 	;The event occurs when an element is invalid
-           "load" 	;The event occurs when an object has loaded
-           "loadeddata" 	;The event occurs when media data is loaded
-           "loadedmetadata" 	;The event occurs when meta data (like dimensions
+           "input"  ;The event occurs when an element gets user input
+           "invalid"  ;The event occurs when an element is invalid
+           "load"  ;The event occurs when an object has loaded
+           "loadeddata"  ;The event occurs when media data is loaded
+           "loadedmetadata"  ;The event occurs when meta data (like dimensions
                              ;and duration) are loaded
-           "message" 	;The event occurs when a message is received through the event source
-           "offline" 	;The event occurs when the browser starts to work offline
-           "online" 	;The event occurs when the browser starts to work online
-           "open" 	;The event occurs when a connection with the event source is opened
-           "pause" 	;The event occurs when the media is paused either by the user
+           "message"  ;The event occurs when a message is received through the event source
+           "offline"  ;The event occurs when the browser starts to work offline
+           "online"  ;The event occurs when the browser starts to work online
+           "open"  ;The event occurs when a connection with the event source is opened
+           "pause"  ;The event occurs when the media is paused either by the user
                     ;or programmatically
-           "play" 	;The event occurs when the media has been started or is no longer paused
-           "playing" 	;The event occurs when the media is playing after having been
+           "play"  ;The event occurs when the media has been started or is no longer paused
+           "playing"  ;The event occurs when the media is playing after having been
                       ;paused or stopped for buffering
-           "progress" 	;The event occurs when the browser is in the process of
+           "progress"  ;The event occurs when the browser is in the process of
                        ;getting the media data (downloading the media)
-           "ratechange" 	;The event occurs when the playing speed of the media is changed
-           "resize" 	;The event occurs when the document view is resized
-           "reset" 	;The event occurs when a form is reset
-           "scroll" 	;The event occurs when an element's scrollbar is being scrolled
-           "search" 	;The event occurs when the user writes something in a search
+           "ratechange"  ;The event occurs when the playing speed of the media is changed
+           "resize"  ;The event occurs when the document view is resized
+           "reset"  ;The event occurs when a form is reset
+           "scroll"  ;The event occurs when an element's scrollbar is being scrolled
+           "search"  ;The event occurs when the user writes something in a search
                      ;field (for <input="search">)
-           "seeked" 	;The event occurs when the user is finished moving/skipping
+           "seeked"  ;The event occurs when the user is finished moving/skipping
                      ;to a new position in the media
-           "seeking" 	;The event occurs when the user starts moving/skipping to a
+           "seeking"  ;The event occurs when the user starts moving/skipping to a
                       ;new position in the media
-           "select" 	;The event occurs after the user selects some text (for <input>
+           "select"  ;The event occurs after the user selects some text (for <input>
                      ;and <textarea>)
-           "show" 	;The event occurs when a <menu> element is shown as a context menu
-           "stalled" 	;The event occurs when the browser is trying to get media data,
+           "show"  ;The event occurs when a <menu> element is shown as a context menu
+           "stalled"  ;The event occurs when the browser is trying to get media data,
                       ;but data is not available
-           "submit" 	;The event occurs when a form is submitted
-           "suspend" 	;The event occurs when the browser is intentionally not getting
+           "submit"  ;The event occurs when a form is submitted
+           "suspend"  ;The event occurs when the browser is intentionally not getting
                       ;media data
-           "timeupdate" 	;The event occurs when the playing position has changed
+           "timeupdate"  ;The event occurs when the playing position has changed
                          ;(like when the user fast forwards to a different point in
                          ;the media)
-           "toggle" 	;The event occurs when the user opens or closes the <details> element
-           "unload" 	;The event occurs once a page has unloaded (for <body>)
-           "waiting" 	;The event occurs when the media has paused but is expected
+           "toggle"  ;The event occurs when the user opens or closes the <details> element
+           "unload"  ;The event occurs once a page has unloaded (for <body>)
+           "waiting"  ;The event occurs when the media has paused but is expected
                       ;to resume (like when the media pauses to buffer more data)
            }}])
 
@@ -1370,7 +1370,7 @@
     @return-event))
 
 (defn dispatch-event
-  ""
+  "Dispatch event on element from window-obj"
   [event
    elem
    & [window-obj]]
