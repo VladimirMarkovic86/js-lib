@@ -1,4 +1,4 @@
-# server
+# JavaScript library
 
 JavaScript library
 
