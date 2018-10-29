@@ -7,7 +7,7 @@ JavaScript library is clojurescript project that implements number of functions 
 You can use this project as dependencie in clojure projects by listing it in project.clj
 
 ```
-[org.clojars.vladimirmarkovic/js-lib "0.1.0"]
+[org.clojars.vladimirmarkovic86/js-lib "0.1.0"]
 ```
 
 ## Authors
