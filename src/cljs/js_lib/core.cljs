@@ -202,15 +202,16 @@
 (defn get-url
   "Retrieve URL from address bar"
   []
-  (aget js/document "URL"))
+  (.-URL
+    js/document))
 
 (defn html?
   "Is data fn parameter HTML element"
   [data]
   (when data
-    (when-let [data-type-name (aget
-                                (type data)
-                                "name")]
+    (when-let [data-type-name (.-name
+                                (type
+                                  data))]
       (> (.indexOf
            data-type-name
            "HTML")
@@ -220,10 +221,18 @@
 (defn convert-to-vector
   "Convert html NodeList object to clojure vector"
   [node-list]
-  (let [result            (atom [])
-        node-list-length  (alength node-list)]
-    (doseq [node-index (range 0 node-list-length)]
-      (swap! result conj (aget node-list node-index))
+  (let [result (atom [])
+        node-list-length (alength
+                           node-list)]
+    (doseq [node-index (range
+                         0
+                         node-list-length)]
+      (swap!
+        result
+        conj
+        (aget
+          node-list
+          node-index))
      )
     @result))
 
@@ -231,11 +240,13 @@
   "Select first element of what css selector fetches from document
    returns single element (html node)"
   [selector]
-  (if (string? selector)
+  (if (string?
+        selector)
     (.querySelector
       js/document
       selector)
-    (when (html? selector)
+    (when (html?
+            selector)
       selector))
  )
 
@@ -255,8 +266,10 @@
   [element
    selector]
   (let [result (atom nil)]
-    (when (and (string? element)
-               (string? selector))
+    (when (and (string?
+                 element)
+               (string?
+                 selector))
       (let [element (.querySelector
                       js/document
                       element)]
@@ -266,15 +279,18 @@
             element
             selector))
        ))
-    (when (and (html? element)
-               (string? selector))
+    (when (and (html?
+                 element)
+               (string?
+                 selector))
       (reset!
         result
         (.querySelector
           element
           selector))
      )
-    (when (html? selector)
+    (when (html?
+            selector)
       (reset!
         result
         selector))
@@ -286,8 +302,10 @@
   [element
    selector]
   (let [result (atom [])]
-    (when (and (string? element)
-               (string? selector))
+    (when (and (string?
+                 element)
+               (string?
+                 selector))
       (let [elements (convert-to-vector
                        (.querySelectorAll
                          js/document
@@ -307,8 +325,10 @@
                 selector))
            ))
        ))
-    (when (and (html? element)
-               (string? selector))
+    (when (and (html?
+                 element)
+               (string?
+                 selector))
       (reset!
         result
         (convert-to-vector
@@ -342,9 +362,8 @@
                    selector
                    js/document
                    nil
-                   (aget
-                     js/XPathResult
-                     "UNORDERED_NODE_ITERATOR_TYPE")
+                   (.-UNORDERED_NODE_ITERATOR_TYPE
+                     js/XPathResult)
                    nil)
         this-node (.iterateNext
                     iterator)]
@@ -354,9 +373,8 @@
   "Fetch child nodes of element param"
   [element]
   (convert-to-vector
-    (aget
-      element
-      "childNodes"))
+    (.-childNodes
+      element))
  )
 
 (defn parse-html
@@ -367,12 +385,24 @@
                            parser
                            html-content
                            "text/html")
-        html-element (first (get-child-nodes html-dom-content))
-        head-element (first (get-child-nodes html-element))
-        body-element (first (rest (get-child-nodes html-element)))
-        concrete-head-elements (get-child-nodes head-element)
-        concrete-body-elements (get-child-nodes body-element)]
-    (if (= (count concrete-body-elements) 0)
+        html-element (first
+                       (get-child-nodes
+                         html-dom-content))
+        head-element (first
+                       (get-child-nodes
+                         html-element))
+        body-element (first
+                       (rest
+                         (get-child-nodes
+                           html-element))
+                      )
+        concrete-head-elements (get-child-nodes
+                                 head-element)
+        concrete-body-elements (get-child-nodes
+                                 body-element)]
+    (if (= (count
+             concrete-body-elements)
+           0)
       concrete-head-elements
       concrete-body-elements))
  )
@@ -381,11 +411,15 @@
   "Determine if param is string or html type of object"
   [exec-fn
    param]
-  (if (string? param)
-    (exec-fn param)
-    (if (html? param)
+  (if (string?
+        param)
+    (exec-fn
+      param)
+    (if (html?
+          param)
       param
-      (if (vector? param)
+      (if (vector?
+            param)
         param
         []))
    ))
@@ -396,12 +430,10 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aget
-      (aget
-        element
-        "validity")
-      "valid"))
- )
+    (.-valid
+      (.-validity
+        element))
+   ))
 
 (defn get-value
   "Returns elements value"
@@ -409,7 +441,8 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aget element "value"))
+    (.-value
+      element))
  )
 
 (defn get-value-as-number
@@ -418,7 +451,8 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aget element "valueAsNumber"))
+    (.-valueAsNumber
+      element))
  )
 
 (defn get-value-as-date
@@ -427,7 +461,8 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aget element "valueAsDate"))
+    (.-valueAsDate
+      element))
  )
 
 (defn set-value
@@ -437,7 +472,10 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aset element "value" new-value))
+    (aset
+      element
+      "value"
+      new-value))
  )
 
 (defn get-checked
@@ -446,7 +484,8 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aget element "checked"))
+    (.-checked
+      element))
  )
 
 (defn set-checked
@@ -456,7 +495,10 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aset element "checked" new-value))
+    (aset
+      element
+      "checked"
+      new-value))
  )
 
 (defn get-src
@@ -465,7 +507,8 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aget element "src"))
+    (.-src
+      element))
  )
 
 (defn set-src
@@ -475,18 +518,23 @@
   (let [element (determine-param-type
                   query-selector
                   element)]
-    (aset element "src" new-value))
+    (aset
+      element
+      "src"
+      new-value))
  )
 
 (defn get-type
   "Returns elements type"
   [element]
-  (aget element "type"))
+  (.-type
+    element))
 
 (defn get-parent
   "Get parentNode property"
   [element]
-  (aget element "parentNode"))
+  (.-parentNode
+    element))
 
 (defn ancestor
   "Finds ancestor of an element at particular level"
@@ -518,13 +566,17 @@
    replace-this
    replace-with]
   (let [result (atom str-content)]
-    (if (< -1 (.indexOf @result replace-this))
+    (if (< -1
+           (.indexOf
+             @result
+             replace-this))
       (recur
         (reset!
           result
-          (.replace str-content
-                    replace-this
-                    replace-with))
+          (.replace
+            str-content
+            replace-this
+            replace-with))
         replace-this
         replace-with)
       @result))
@@ -550,26 +602,37 @@
   [element]
   (let [sl-node (determine-param-type
                   query-selector element)]
-    (aget sl-node "innerHTML"))
+    (.-innerHTML
+      sl-node))
  )
 
 (defn set-inner-html
   "Set html-content as innerHTML property of elements feched by selector"
   [selector
    html-content]
-  (let [selected-nodes (determine-param-type query-selector-all selector)]
-    (if (vector? selected-nodes)
+  (let [selected-nodes (determine-param-type
+                         query-selector-all
+                         selector)]
+    (if (vector?
+          selected-nodes)
       (doseq [sl-node selected-nodes]
-        (aset sl-node "innerHTML" html-content))
-      (aset selected-nodes "innerHTML" html-content))
+        (aset
+          sl-node
+          "innerHTML"
+          html-content))
+      (aset
+        selected-nodes
+        "innerHTML"
+        html-content))
    ))
 
 (defn get-outer-html
   "Get outerHTML property of first element feched by selector"
   [selector]
   (let [sl-node (query-selector selector)]
-    (aget sl-node "outerHTML"))
-  )
+    (.-outerHTML
+      sl-node))
+ )
 
 (defn set-outer-html
   "Set html-content as outerHTML property of elements feched by selector"
@@ -578,7 +641,10 @@
   (let [selected-nodes (query-selector-all
                          selector)]
     (doseq [sl-node selected-nodes]
-      (aset sl-node "outerHTML" html-content))
+      (aset
+        sl-node
+        "outerHTML"
+        html-content))
    ))
 
 ; Implement multi select
@@ -590,57 +656,74 @@
                   query-selector
                   element)
         slctd-optns (convert-to-vector
-                      (aget element "selectedOptions"))
+                      (.-selectedOptions
+                        element))
         slctd-optns-vec (atom [])]
    (doseq [slctd-optn slctd-optns]
      (let [sl-attrs (atom {})]
        (doseq [i (range
-                   (aget
-                     (aget
-                       slctd-optn
-                       "attributes")
-                     "length"))]
+                   (.-length
+                     (.-attributes
+                       slctd-optn))
+                  )]
          (let [attr (aget
-                      (aget
-                        slctd-optn
-                        "attributes")
+                      (.-attributes
+                        slctd-optn)
                       i)]
            (swap!
              sl-attrs
              conj
-             {(keyword (aget attr "name")) (aget attr "value")}))
-        )
+             {(keyword
+                (.-name
+                  attr)) (.-value
+                           attr)})
+          ))
        (swap!
          sl-attrs
          conj
-         {(keyword "label") (aget slctd-optn "innerHTML")})
+         {(keyword
+            "label") (.-innerHTML
+                       slctd-optn)})
        (swap!
          slctd-optns-vec
          conj
          @sl-attrs))
     )
-   (when (not-empty @slctd-optns-vec)
-     (if (= (count @slctd-optns-vec)
+   (when (not-empty
+           @slctd-optns-vec)
+     (if (= (count
+              @slctd-optns-vec)
             1)
-       (first @slctd-optns-vec)
+       (first
+         @slctd-optns-vec)
        @slctd-optns-vec))
    ))
 
-(defn- add-fn-to-event
+(defn add-fn-to-event
   "Add function to event for particular element"
   [element
    event-type
    event-function
    & [fn-params]]
-  (let [event-funcs (str event-type "-funcs")]
+  (let [event-funcs (str
+                      event-type
+                      "-funcs")]
     (aset
       element
       event-funcs
-      (assoc (aget element event-funcs)
-             (str event-function)
-             #(event-function fn-params element))
+      (assoc
+        (aget
+          element
+          event-funcs)
+        (str
+          event-function)
+        #(event-function
+           fn-params
+           element))
      )
-    (when-not (aget element event-type)
+    (when-not (aget
+                element
+                event-type)
       (aset
         element
         event-type
@@ -672,7 +755,8 @@
   (let [selected-nodes (determine-param-type
                          query-selector-all
                          element)]
-    (if (vector? selected-nodes)
+    (if (vector?
+          selected-nodes)
       (doseq [sl-node selected-nodes]
         (add-fn-to-event
           sl-node
@@ -686,25 +770,36 @@
         fn-params))
    ))
 
-(defn- remove-fn-from-event
+(defn remove-fn-from-event
   "Remove particular function from executing after an event has occurred"
   [element
    event-type
    event-function]
-  (let [event-funcs (str event-type "-funcs")]
+  (let [event-funcs (str
+                      event-type
+                      "-funcs")]
     (aset
       element
       event-funcs
-      (dissoc (aget element event-funcs)
-              (str event-function))
+      (dissoc
+        (aget
+          element
+          event-funcs)
+        (str
+          event-function))
      )
-    (when (empty? (aget element event-funcs))
-      (aset element
-            event-type
-            nil)
-      (aset element
-            event-funcs
-            nil))
+    (when (empty?
+            (aget
+              element
+              event-funcs))
+      (aset
+        element
+        event-type
+        nil)
+      (aset
+        element
+        event-funcs
+        nil))
    ))
 
 (defn remove-event
@@ -721,7 +816,8 @@
   (let [selected-nodes (determine-param-type
                          query-selector-all
                          element)]
-    (if (vector? selected-nodes)
+    (if (vector?
+          selected-nodes)
       (doseq [sl-node selected-nodes]
         (remove-fn-from-event
           sl-node
@@ -733,11 +829,13 @@
         event-function))
    ))
 
-(defn- remove-all-fns-from-event
+(defn remove-all-fns-from-event
   "Remove all functions from executing after an event has occurred on particular element"
   [element
    event-type]
-  (let [event-funcs (str event-type "-funcs")]
+  (let [event-funcs (str
+                      event-type
+                      "-funcs")]
     (aset
       element
       event-type
@@ -755,7 +853,8 @@
   (let [selected-nodes (determine-param-type
                          query-selector-all
                          element)]
-    (if (vector? selected-nodes)
+    (if (vector?
+          selected-nodes)
       (doseq [sl-node selected-nodes]
         (remove-all-fns-from-event
           sl-node
@@ -775,16 +874,22 @@
                       parse-html
                       html-content)]
     (doseq [sl-node selected-nodes]
-      (when (vector? child-nodes)
+      (when (vector?
+              child-nodes)
         (doseq [ch-node child-nodes]
-          (let [insert-before-this (first (get-child-nodes sl-node))]
+          (let [insert-before-this (first
+                                     (get-child-nodes
+                                       sl-node))]
             (.insertBefore
               sl-node
               ch-node
               insert-before-this))
          ))
-      (when (html? child-nodes)
-        (let [insert-before-this (first (get-child-nodes sl-node))]
+      (when (html?
+              child-nodes)
+        (let [insert-before-this (first
+                                   (get-child-nodes
+                                     sl-node))]
           (.insertBefore
             sl-node
             child-nodes
@@ -802,9 +907,11 @@
         child-nodes (determine-param-type
                       parse-html
                       html-content)]
-    (if (vector? selected-nodes)
+    (if (vector?
+          selected-nodes)
       (doseq [sl-node selected-nodes]
-        (if (vector? child-nodes)
+        (if (vector?
+              child-nodes)
           (doseq [ch-node child-nodes]
             (.appendChild
               sl-node
@@ -813,7 +920,8 @@
             sl-node
             child-nodes))
        )
-      (if (vector? child-nodes)
+      (if (vector?
+            child-nodes)
         (doseq [ch-node child-nodes]
           (.appendChild
             selected-nodes
@@ -840,7 +948,8 @@
   (let [selected-nodes (determine-param-type
                          query-selector-all
                          selector)]
-    (when (vector? selected-nodes)
+    (when (vector?
+            selected-nodes)
       (doseq [sl-node selected-nodes]
         (.removeChild
           (get-parent
@@ -857,10 +966,20 @@
 (defn remove-element-content
   "Remove content from elements fetched by selector"
   [selector]
-  (let [selected-nodes (query-selector-all
+  (let [selected-nodes (determine-param-type
+                         query-selector-all
                          selector)]
-    (doseq [sl-node selected-nodes]
-      (aset sl-node "innerHTML" ""))
+    (if (vector?
+          selected-nodes)
+      (doseq [sl-node selected-nodes]
+        (aset
+          sl-node
+          "innerHTML"
+          ""))
+      (aset
+        selected-nodes
+        "innerHTML"
+        ""))
    ))
 
 (defn remove-element-from-element
@@ -923,12 +1042,14 @@
 (defn get-class-list
   "Get classList property"
   [element]
-  (aget element "classList"))
+  (.-classList
+    element))
 
 (defn get-node-name
   "Get nodeName property"
   [element]
-  (aget element "nodeName"))
+  (.-nodeName
+    element))
 
 (defn add-class
   "Add class to elements collection"
@@ -937,7 +1058,8 @@
   (let [elements (determine-param-type
                    query-selector-all
                    elements)]
-    (when (vector? elements)
+    (when (vector?
+            elements)
       (doseq [element elements]
         (.add
           (get-class-list
@@ -958,8 +1080,8 @@
   (let [elements (determine-param-type
                    query-selector-all
                    elements)]
-    
-    (when (vector? elements)
+    (when (vector?
+            elements)
       (doseq [element elements]
         (.remove
           (get-class-list
@@ -973,44 +1095,103 @@
         single-class))
    ))
 
+(defn contains-class
+  "Remove class from elements collection"
+  [elements
+   single-class]
+  (let [result (atom true)
+        elements (determine-param-type
+                   query-selector-all
+                   elements)]
+    (when (vector?
+            elements)
+      (doseq [element elements]
+        (let [class-list (get-class-list
+                           element)]
+          (swap!
+            result
+            (fn [atom-v
+                 param]
+              (and atom-v
+                   (not= param
+                         -1))
+             )
+            (.indexOf
+              (.-value
+                class-list)
+              single-class))
+         ))
+     )
+    (when (html?
+            elements)
+      (let [class-list (get-class-list
+                         elements)]
+        (swap!
+          result
+          (fn [atom-v
+               param]
+            (and atom-v
+                 (not= param
+                       -1))
+           )
+          (.indexOf
+            (.-value
+              class-list)
+            single-class))
+       ))
+   @result))
+
 (defn element-exists
   "Check if fade in style exists in DOM"
   [selector]
   (let [selected-elements (query-selector-all
                             selector)]
-    (not (empty? selected-elements))
-   ))
+    (not-empty
+      selected-elements))
+ )
 
-(defn- fade-anim-append
+(defn fade-anim-append
   "Append fade in style to head"
   [delay-time
    style-id
    animation-name-class
    from-opacity
    to-opacity]
-  (when-not (element-exists (str "style#" style-id))
-    (let [delay-time-as-string (str (float (/ delay-time 1000))
+  (when-not (element-exists
+              (str
+                "style#"
+                style-id))
+    (let [delay-time-as-string (str
+                                 (float
+                                   (/ delay-time
+                                      1000))
                                 )
           final-element (gen
                           (stl
                             style-id
                             (anmtn
                              animation-name-class
-                             {:opacity (str from-opacity)}
-                             {:opacity (str to-opacity)})
+                             {:opacity (str
+                                         from-opacity)}
+                             {:opacity (str
+                                         to-opacity)})
                             (slctr
-                              (str "." animation-name-class)
-                              {:animation (str animation-name-class
-                                               " "
-                                               delay-time-as-string
-                                               "s")}))
+                              (str
+                                "."
+                                animation-name-class)
+                              {:animation (str
+                                            animation-name-class
+                                            " "
+                                            delay-time-as-string
+                                            "s")})
+                           )
                           "style")]
       (append-element
         "body div.styles"
         final-element))
    ))
 
-(defn- fade-in-iteration
+(defn fade-in-iteration
   "Set class on element to fade in, and and then append element to selected node"
   [ch-node
    sl-node
@@ -1024,12 +1205,21 @@
                              "div.scripts")]
     (when-not (= node-name
                  "#text")
-      (add-class ch-node anim-name-class)
-      (.insertBefore sl-node ch-node insert-before-this)
+      (add-class
+        ch-node
+        anim-name-class)
+      (.insertBefore
+        sl-node
+        ch-node
+        insert-before-this)
       (timeout
-        #(do (remove-class ch-node anim-name-class)
+        #(do (remove-class
+               ch-node
+               anim-name-class)
              (set-outer-html
-               (str "style#" style-id)
+               (str
+                 "style#"
+                 style-id)
                "")
              (set-inner-html 
                "div.styles"
@@ -1064,8 +1254,12 @@
       animation-name-class
       from-opacity
       to-opacity]]
-  (let [style-id (str style-identification "fade-in")
-        anim-name-class (str animation-name-class "fade-in")
+  (let [style-id (str
+                   style-identification
+                   "fade-in")
+        anim-name-class (str
+                          animation-name-class
+                          "fade-in")
         from-opac (or from-opacity
                       0)
         to-opac (or to-opacity
@@ -1082,7 +1276,8 @@
                         parse-html
                         html-content)]
       (doseq [sl-node selected-nodes]
-        (if (vector? child-nodes)
+        (if (vector?
+              child-nodes)
           (doseq [ch-node child-nodes]
             (fade-in-iteration
               ch-node
@@ -1121,8 +1316,12 @@
       animation-name-class
       from-opacity
       to-opacity]]
-  (let [style-id (str style-identification "fade-out")
-        anim-name-class (str animation-name-class "fade-out")
+  (let [style-id (str
+                   style-identification
+                   "fade-out")
+        anim-name-class (str
+                          animation-name-class
+                          "fade-out")
         from-opac (or from-opacity
                       1)
         to-opac (or to-opacity
@@ -1133,16 +1332,22 @@
       anim-name-class
       from-opac
       to-opac)
-    (let [selected-nodes   (query-selector-all selector)]
+    (let [selected-nodes (query-selector-all
+                           selector)]
       (doseq [sl-node selected-nodes]
-        (let [child-nodes    (get-child-nodes sl-node)]
+        (let [child-nodes (get-child-nodes
+                            sl-node)]
           (if only-content
             (doseq [ch-node child-nodes]
-              (let [node-name  (get-node-name ch-node)]
-                (when-not (= "#text" node-name)
+              (let [node-name (get-node-name
+                                ch-node)]
+                (when-not (= "#text"
+                             node-name)
                  (remove-class
                    ch-node
-                   (str animation-name-class "fade-in"))
+                   (str
+                     animation-name-class
+                     "fade-in"))
                  (add-class
                    ch-node
                    anim-name-class))
@@ -1155,10 +1360,18 @@
     (timeout
       #(do
          (if only-content
-           (set-outer-html (str "." anim-name-class) "")
-           (set-outer-html selector ""))
+           (set-outer-html
+             (str
+               "."
+               anim-name-class)
+             "")
+           (set-outer-html
+             selector
+             ""))
          (set-outer-html
-           (str "style#" style-id)
+           (str
+             "style#"
+             style-id)
            "")
          (set-inner-html 
            "div.styles"
@@ -1189,24 +1402,32 @@
 
 (defn update-progress-bar
   "Update percentage of progress bar"
-  [progress-value]
-  (let [progress-bar-done (query-selector
+  [progress-value
+   & [color1
+      color2]]
+  (let [color1 (or color1
+                   "red")
+        color2 (or color2
+                   "white")
+        progress-bar-done (query-selector
                             ".progress-bar")
         progress-bar-done-number (query-selector
                                    ".progress-bar-done-number")]
-   (when-not (nil? progress-bar-done)
+   (when-not (nil?
+               progress-bar-done)
      (set-attr
        progress-bar-done
        "style"
        (str
          "background-image: "
           "linear-gradient(to right, "
-           "red 0%, "
-           "red " progress-value "%, "
-           "white " progress-value "%, "
-           "white 100%);"))
+           color1 " 0%, "
+           color1 " " progress-value "%, "
+           color2 " " progress-value "%, "
+           color2 " 100%);"))
     )
-   (when-not (nil? progress-bar-done-number)
+   (when-not (nil?
+               progress-bar-done-number)
      (set-inner-html
        progress-bar-done-number
        (str
@@ -1232,7 +1453,7 @@
         "</div>"
        "</div>"
       "</div>"
-      ))
+     ))
  )
 
 (defn end-progress-bar
@@ -1245,7 +1466,8 @@
 (defn is-checked?
   "Return value of checked property from html element"
   [element]
-  (aget element "checked"))
+  (.-checked
+    element))
 
 (defn checked-value-with-index
   "Iterate through html radio elements and check if any of them is checked,
@@ -1257,12 +1479,14 @@
              radio-group-elements))
     (let [radio-group-element (radio-group-elements
                                 index)]
-      (if (is-checked? radio-group-element)
+      (if (is-checked?
+            radio-group-element)
         (get-value
           radio-group-element)
         (recur
           radio-group-elements
-          (inc index))
+          (inc
+            index))
        ))
    ))
 
@@ -1320,8 +1544,11 @@
   [event
    index]
   (when (< index
-           (count events))
-    (let [event-type-obj (get events index)
+           (count
+             events))
+    (let [event-type-obj (get
+                           events
+                           index)
           {events :events} event-type-obj]
       (if (contains?
             events
@@ -1345,7 +1572,8 @@
       (reset!
         return-event
         event))
-    (when (string? event)
+    (when (string?
+            event)
       (let [window-obj (or window-obj
                            js/window)
             {event-type :event-type
@@ -1353,9 +1581,8 @@
                                              event
                                              0)
             event-obj (.createEvent
-                        (aget
-                          window-obj
-                          "document")
+                        (.-document
+                          window-obj)
                         event-type)]
         (js-invoke
           event-obj
@@ -1379,9 +1606,8 @@
         elem (if (string?
                    elem)
                (query-selector-on-element
-                 (aget
-                   window-obj
-                   "document")
+                 (.-document
+                   window-obj)
                  elem)
                elem)
         event-obj (init-event
@@ -1391,4 +1617,54 @@
       elem
       event-obj))
  )
+
+(defn get-next-siblings
+  "Return vector of next siblings"
+  [element]
+  (let [result-vector (atom [])
+        element-w (atom element)]
+    (while (.-nextSibling
+             @element-w)
+      (let [sibling (.-nextSibling
+                      @element-w)]
+        (swap!
+          result-vector
+          conj
+          sibling)
+        (reset!
+          element-w
+          sibling))
+     )
+    @result-vector))
+
+(defn get-previous-siblings
+  "Return vector of previous siblings"
+  [element]
+  (let [result-vector (atom [])
+        element-w (atom element)]
+    (while (.-previousSibling
+             @element-w)
+      (let [sibling (.-previousSibling
+                      @element-w)]
+        (swap!
+          result-vector
+          conj
+          sibling)
+        (reset!
+          element-w
+          sibling))
+     )
+    @result-vector))
+
+(defn get-all-siblings
+  "Return all siblings"
+  [element]
+  (let [result (get-previous-siblings
+                 element)
+        result (apply
+                 conj
+                 result
+                 (get-next-siblings
+                   element))]
+    result))
 
