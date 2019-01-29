@@ -273,12 +273,14 @@
       (let [element (.querySelector
                       js/document
                       element)]
-        (reset!
-          result
-          (.querySelector
-            element
-            selector))
-       ))
+        (when element
+          (reset!
+            result
+            (.querySelector
+              element
+              selector))
+         ))
+     )
     (when (and (html?
                  element)
                (string?
