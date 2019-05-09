@@ -212,11 +212,16 @@
     (when-let [data-type-name (.-name
                                 (type
                                   data))]
-      (> (.indexOf
-           data-type-name
-           "HTML")
-         -1))
-   ))
+      (or (> (.indexOf
+               data-type-name
+               "HTML")
+             -1)
+          (> (.indexOf
+               data-type-name
+               "SVG")
+             -1))
+     ))
+ )
 
 (defn convert-to-vector
   "Convert html NodeList object to clojure vector"
@@ -423,8 +428,9 @@
       (if (vector?
             param)
         param
-        []))
-   ))
+        [])
+     ))
+ )
 
 (defn is-valid?
   "Returns elements value"
@@ -958,7 +964,8 @@
             sl-node)
           sl-node))
      )
-    (when (html? selected-nodes)
+    (when (html?
+            selected-nodes)
       (.removeChild
         (get-parent
           selected-nodes)
@@ -1068,7 +1075,8 @@
             element)
           single-class))
      )
-    (when (html? elements)
+    (when (html?
+            elements)
       (.add
         (get-class-list
           elements)
@@ -1090,7 +1098,8 @@
             element)
           single-class))
      )
-    (when (html? elements)
+    (when (html?
+            elements)
       (.remove
         (get-class-list
           elements)
