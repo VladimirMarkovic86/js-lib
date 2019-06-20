@@ -702,8 +702,9 @@
     (let [sl-node (determine-param-type
                     query-selector
                     element)]
-      (.-innerHTML
-        sl-node))
+      (aget
+        sl-node
+        "innerHTML"))
    ))
 
 (defn set-inner-html
@@ -729,16 +730,14 @@
 (defn get-outer-html
   "Get outerHTML property of first element feched by selector"
   [selector]
-  (when (string?
-          selector)
-    (let [sl-node (query-selector
+  (when selector
+    (let [sl-node (determine-param-type
+                    query-selector
                     selector)]
-      (when (html?
-              sl-node)
-        (.-outerHTML
-          sl-node))
-     ))
- )
+      (aget
+        sl-node
+        "outerHTML"))
+   ))
 
 (defn set-outer-html
   "Set html-content as outerHTML property of elements feched by selector"
