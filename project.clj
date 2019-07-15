@@ -1,16 +1,18 @@
-(defproject org.clojars.vladimirmarkovic86/js-lib "0.1.16"
+(defproject org.clojars.vladimirmarkovic86/js-lib "0.1.17"
   :description "JavaScript library"
   :url "http://github.com/VladimirMarkovic86/js-lib"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojurescript "1.10.339"]
-                 [org.clojars.vladimirmarkovic86/ajax-lib "0.1.11"]
-                 [org.clojars.vladimirmarkovic86/htmlcss-lib "0.1.6"]
+                 [org.clojars.vladimirmarkovic86/ajax-lib "0.1.12"]
+                 [org.clojars.vladimirmarkovic86/htmlcss-lib "0.1.7"]
                  ]
 
   :min-lein-version "2.0.0"
   
   :source-paths ["src/cljs"]
+  
+  :jar-exclusions [#"^public/"]
 
   :plugins [[lein-cljsbuild  "1.1.7"]
             [lein-doo "0.1.11"]
