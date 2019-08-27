@@ -1,4 +1,4 @@
-(defproject org.clojars.vladimirmarkovic86/js-lib "0.1.19"
+(defproject org.clojars.vladimirmarkovic86/js-lib "0.1.20"
   :description "JavaScript library"
   :url "http://github.com/VladimirMarkovic86/js-lib"
   :license {:name "Eclipse Public License"

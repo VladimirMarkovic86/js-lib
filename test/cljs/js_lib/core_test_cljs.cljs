@@ -10,19 +10,19 @@
                                  get-inner-html set-inner-html get-outer-html
                                  set-outer-html get-selected-options add-fn-to-event
                                  event remove-fn-from-event remove-event
-                                 remove-all-fns-from-event remove-all-event prepend-element
-                                 append-element content remove-element
-                                 remove-element-content remove-element-from-element
-                                 timeout get-attr set-attr set-attrs get-class-list
-                                 get-node-name add-class remove-class contains-class
-                                 element-exists fade-anim-append fade-in-iteration
-                                 fade-in fade-out start-please-wait end-please-wait
-                                 update-progress-bar start-progress-bar
-                                 end-progress-bar is-checked? checked-value-with-index
-                                 checked-value cb-checked-values fade-out-and-fade-in
-                                 find-event-type init-event dispatch-event
-                                 get-next-siblings get-previous-siblings
-                                 get-all-siblings]]))
+                                 remove-all-fns-from-event remove-all-event
+                                 contains-event-fn? prepend-element append-element content
+                                 remove-element remove-element-content
+                                 remove-element-from-element timeout get-attr set-attr
+                                 set-attrs get-class-list get-node-name add-class
+                                 remove-class contains-class element-exists
+                                 fade-anim-append fade-in-iteration fade-in fade-out
+                                 start-please-wait end-please-wait update-progress-bar
+                                 start-progress-bar end-progress-bar is-checked?
+                                 checked-value-with-index checked-value
+                                 cb-checked-values fade-out-and-fade-in find-event-type
+                                 init-event dispatch-event get-next-siblings
+                                 get-previous-siblings get-all-siblings]]))
 
 (deftest test-get-url
   (testing "Test get url"
@@ -2371,6 +2371,59 @@
               "-funcs"))
          )
        )
+      
+     )
+    
+   ))
+
+(deftest test-contains-event-fn?
+  (testing "Test contains event fn?"
+    
+    (let [element nil
+          event-type nil
+          event-function nil
+          result (contains-event-fn?
+                   element
+                   event-type
+                   event-function)]
+      
+      (is
+        (nil?
+          result)
+       )
+      
+     )
+    
+    (let [element (query-selector
+                    "body")
+          event-type "onclick"
+          event-function query-selector]
+      
+      (is
+        (false?
+          (contains-event-fn?
+            element
+            event-type
+            event-function))
+       )
+      
+      (event
+        element
+        event-type
+        event-function)
+      
+      (is
+        (true?
+          (contains-event-fn?
+            element
+            event-type
+            event-function))
+       )
+      
+      (remove-event
+        element
+        event-type
+        event-function)
       
      )
     

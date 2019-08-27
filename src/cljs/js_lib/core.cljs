@@ -202,16 +202,18 @@
 (defn get-url
   "Retrieve URL from address bar"
   []
-  (.-URL
-    js/document))
+  (aget
+    js/document
+    "URL"))
 
 (defn html?
   "Is data fn parameter HTML element"
   [data]
   (when data
-    (when-let [data-type-name (.-name
+    (when-let [data-type-name (aget
                                 (type
-                                  data))]
+                                  data)
+                                "name")]
       (or (> (.indexOf
                data-type-name
                "HTML")
@@ -375,8 +377,9 @@
                    selector
                    js/document
                    nil
-                   (.-UNORDERED_NODE_ITERATOR_TYPE
-                     js/XPathResult)
+                   (aget
+                     js/XPathResult
+                     "UNORDERED_NODE_ITERATOR_TYPE")
                    nil)
         this-node (.iterateNext
                     iterator)]
@@ -389,8 +392,9 @@
              (html?
                element))
     (convert-to-vector
-      (.-childNodes
-        element))
+      (aget
+        element
+        "childNodes"))
    ))
 
 (defn parse-html
@@ -455,9 +459,11 @@
                     query-selector
                     element)]
       (when element
-        (.-valid
-          (.-validity
-            element))
+        (aget
+          (aget
+            element
+            "validity")
+          "valid")
        ))
    ))
 
@@ -469,8 +475,9 @@
                     query-selector
                     element)]
       (when element
-        (.-value
-          element))
+        (aget
+          element
+          "value"))
      ))
  )
 
@@ -482,8 +489,9 @@
                     query-selector
                     element)]
       (when element
-        (.-valueAsNumber
-          element))
+        (aget
+          element
+          "valueAsNumber"))
      ))
  )
 
@@ -495,8 +503,9 @@
                     query-selector
                     element)]
       (when element
-        (.-valueAsDate
-          element))
+        (aget
+          element
+          "valueAsDate"))
      ))
  )
 
@@ -525,8 +534,9 @@
                     query-selector
                     element)]
       (when element
-        (.-checked
-          element))
+        (aget
+          element
+          "checked"))
      ))
  )
 
@@ -556,8 +566,9 @@
                     query-selector
                     element)]
       (when element
-        (.-src
-          element))
+        (aget
+          element
+          "src"))
      ))
  )
 
@@ -585,8 +596,9 @@
   (when (and element
              (html?
                element))
-    (.-type
-      element))
+    (aget
+      element
+      "type"))
  )
 
 (defn get-parent
@@ -598,8 +610,9 @@
                     element)]
       (when (html?
               element)
-        (.-parentNode
-          element))
+        (aget
+          element
+          "parentNode"))
      ))
  )
 
@@ -766,34 +779,41 @@
                   query-selector
                   element)
         slctd-optns (convert-to-vector
-                      (.-selectedOptions
-                        element))
+                      (aget
+                        element
+                        "selectedOptions"))
         slctd-optns-vec (atom [])]
    (doseq [slctd-optn slctd-optns]
      (let [sl-attrs (atom {})]
        (doseq [i (range
-                   (.-length
-                     (.-attributes
-                       slctd-optn))
+                   (aget
+                     (aget
+                       slctd-optn
+                       "attributes")
+                     "length")
                   )]
          (let [attr (aget
-                      (.-attributes
-                        slctd-optn)
+                      (aget
+                        slctd-optn
+                        "attributes")
                       i)]
            (swap!
              sl-attrs
              conj
              {(keyword
-                (.-name
-                  attr)) (.-value
-                           attr)})
+                (aget
+                  attr
+                  "name")) (aget
+                             attr
+                             "value")})
           ))
        (swap!
          sl-attrs
          conj
          {(keyword
-            "label") (.-innerHTML
-                       slctd-optn)})
+            "label") (aget
+                       slctd-optn
+                       "innerHTML")})
        (swap!
          slctd-optns-vec
          conj
@@ -1004,6 +1024,32 @@
         (remove-all-fns-from-event
           element
           event-type))
+     ))
+ )
+
+(defn contains-event-fn?
+  "Check if event contains a function"
+  [element
+   event-type
+   event-function]
+  (when (and element
+             (html?
+               element)
+             event-type
+             (string?
+               event-type)
+             event-function
+             (fn?
+               event-function))
+    (let [event-funcs (str
+                        event-type
+                        "-funcs")]
+      (contains?
+        (aget
+          element
+          event-funcs)
+        (str
+          event-function))
      ))
  )
 
@@ -1218,8 +1264,9 @@
   (when (and element
              (html?
                element))
-    (.-classList
-      element))
+    (aget
+      element
+      "classList"))
  )
 
 (defn get-node-name
@@ -1228,8 +1275,9 @@
   (when (and element
              (html?
                element))
-    (.-nodeName
-      element))
+    (aget
+      element
+      "nodeName"))
  )
 
 (defn add-class
@@ -1296,8 +1344,9 @@
           (doseq [element elements]
             (let [class-list (get-class-list
                                element)
-                  class-list-value (.-value
-                                     class-list)
+                  class-list-value (aget
+                                     class-list
+                                     "value")
                   class-set (into
                               #{}
                               (.split
@@ -1321,8 +1370,9 @@
               elements)
         (let [class-list (get-class-list
                            elements)
-              class-list-value (.-value
-                                 class-list)
+              class-list-value (aget
+                                 class-list
+                                 "value")
               class-set (into
                           #{}
                           (.split
@@ -1584,8 +1634,9 @@
   "Display please wait message"
   []
   (.blur
-    (.-activeElement
-      js/document))
+    (aget
+      js/document
+      "activeElement"))
   (append-element
     "body"
     "<div class=\"please-wait\" ></div>"))
@@ -1636,8 +1687,9 @@
   "Display progress bar message"
   []
   (.blur
-    (.-activeElement
-      js/document))
+    (aget
+      js/document
+      "activeElement"))
   (start-please-wait)
   (append-element
     "body"
@@ -1665,8 +1717,9 @@
   (when (and element
              (html?
                element))
-    (.-checked
-      element))
+    (aget
+      element
+      "checked"))
  )
 
 (defn checked-value-with-index
@@ -1784,8 +1837,9 @@
                                              event
                                              0)
             event-obj (.createEvent
-                        (.-document
-                          window-obj)
+                        (aget
+                          window-obj
+                          "document")
                         event-type)]
         (js-invoke
           event-obj
@@ -1811,8 +1865,9 @@
           elem (if (string?
                      elem)
                  (query-selector-on-element
-                   (.-document
-                     window-obj)
+                   (aget
+                     window-obj
+                     "document")
                    elem)
                  elem)
           event-obj (init-event
@@ -1834,10 +1889,12 @@
                element))
     (let [result-vector (atom [])
           element-w (atom element)]
-      (while (.-nextSibling
-               @element-w)
-        (let [sibling (.-nextSibling
-                        @element-w)]
+      (while (aget
+               @element-w
+               "nextSibling")
+        (let [sibling (aget
+                        @element-w
+                        "nextSibling")]
           (swap!
             result-vector
             conj
@@ -1857,10 +1914,12 @@
                element))
     (let [result-vector (atom [])
           element-w (atom element)]
-      (while (.-previousSibling
-               @element-w)
-        (let [sibling (.-previousSibling
-                        @element-w)]
+      (while (aget
+               @element-w
+               "previousSibling")
+        (let [sibling (aget
+                        @element-w
+                        "previousSibling")]
           (swap!
             result-vector
             conj
